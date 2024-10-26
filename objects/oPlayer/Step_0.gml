@@ -43,15 +43,32 @@ if place_meeting (x, y, oFlag) {
 		ini_write_real ("Player","x_atual", 48)
 		ini_write_real ("Player","y_atual", 112)
 		ini_write_real ("Player","room", real (room_next (room)))
+		ini_write_real ("Player","nivel", ++nivel)
+		
+		pontos += 10
+		
+		ini_write_real ("Player","pontos", pontos)
 		
 		ini_close ()
 		
-		show_message("Arquivo salvo!")
+		show_message("Vida: " + string(vida) + "\nPontos: " + string(pontos) + "\nNível: " + string(nivel));
 		
 		room_goto_next ()
 	}
 }
 
 if place_meeting (x, y, oSpike) {
-	room_restart ()
+	if (file_exists ("save.ini"))
+		file_delete ("save.ini")
+		
+	ini_open ("save.ini")
+	
+	vida -= 10
+	
+	if (vida == 0) {
+		vida = 100	
+		room_restart ()
+	}
+	
+	ini_close ()
 }
